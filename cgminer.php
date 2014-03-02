@@ -1,12 +1,13 @@
 <?php
-$port = "4028";
 if(!isset($_GET["addr"]))
 	exit(0);
 
 $addr = $_GET["addr"];
 
-if(isset($_GET["port"]))
-	$port = $_GET["port"];
+$port = explode(':',$addr)[1];
+$addr = explode(':',$addr)[0];
+if($port == "")
+	$port = "4028";
 
 $data = request($addr,$port,"summary");
 
