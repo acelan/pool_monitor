@@ -431,59 +431,35 @@
                     )
                 );
 
-                if(typeof data.GPU0 === 'undefined')
-                    return;
-                $('#worker_'+idx).append(
-                    $('<tr>')
-                        .append($('<th>').append('GPU0'))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('Hashrate'))
-                        .append($('<td>').append(data.GPU0.MHS_av))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('Temp.'))
-                        .append($('<td>').append(data.GPU0.Temperature))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('Accepted'))
-                        .append($('<td>').append(data.GPU0.Accepted))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('Rejected'))
-                        .append($('<td>').append(data.GPU0.Rejected))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('H/W Err.'))
-                        .append($('<td>').append(data.GPU0.Hardware_Errors))
-                );
-                if(typeof data.GPU1 === 'undefined')
-                    return;
-                $('#worker_'+idx).append(
-                    $('<tr>')
-                        .append($('<th>').append('GPU1'))
-                        .append($('<td>').append(data.GPU1.MHS_av))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('Hashrate'))
-                        .append($('<td>').append(data.GPU1.MHS_av))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('Temp.'))
-                        .append($('<td>').append(data.GPU1.Temperature))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('Accepted'))
-                        .append($('<td>').append(data.GPU1.Accepted))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('Rejected'))
-                        .append($('<td>').append(data.GPU1.Rejected))
-		    ).append(
-                    $('<tr>')
-                        .append($('<th>').append('H/W Err.'))
-                        .append($('<td>').append(data.GPU1.Hardware_Errors))
-                );
+		for(var i=0;i<10;i=i+1)
+		{
+                	if(typeof data['GPU'+i] === 'undefined')
+                	    break;
+                	$('#worker_'+idx).append(
+                	    $('<tr>')
+                	        .append($('<th>').append('GPU'+i))
+			    ).append(
+                	    $('<tr>')
+                	        .append($('<th>').append('Hashrate'))
+                	        .append($('<td>').append(data['GPU'+i]['MHS_av']))
+			    ).append(
+                	    $('<tr>')
+                	        .append($('<th>').append('Temp.'))
+                	        .append($('<td>').append(data['GPU'+i]['Temperature']))
+			    ).append(
+                	    $('<tr>')
+                	        .append($('<th>').append('Accepted'))
+                	        .append($('<td>').append(data['GPU'+i]['Accepted']))
+			    ).append(
+                	    $('<tr>')
+                	        .append($('<th>').append('Rejected'))
+                	        .append($('<td>').append(data['GPU'+i]['Rejected']))
+			    ).append(
+                	    $('<tr>')
+                	        .append($('<th>').append('H/W Err.'))
+                	        .append($('<td>').append(data['GPU'+i]['Hardware_Errors']))
+                	);
+		}
             });
         }
 
