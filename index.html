@@ -1,0 +1,695 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="sites.js" type="text/javascript"></script>
+    <script language='javascript'>
+    <!--
+
+    Number.prototype.pad2 =function(){
+        return this>9?this:'0'+this;
+    }
+    
+    Date.prototype.format=function (format) {
+        var it=new Date();
+        var it=this;
+        var M=it.getMonth()+1,H=it.getHours(),m=it.getMinutes(),d=it.getDate(),s=it.getSeconds();
+        var n={ 'yyyy': it.getFullYear()
+                ,'MM': M.pad2(),'M': M
+                ,'dd': d.pad2(),'d': d
+                ,'HH': H.pad2(),'H': H
+                ,'mm': m.pad2(),'m': m
+                ,'ss': s.pad2(),'s': s
+        };
+        return format.replace(/([a-zA-Z]+)/g,function (s,$1) { return n[$1]; });
+    }
+    //-->
+    </script>
+    <link href="pool.css" rel="stylesheet" type="text/css">
+    <title>Pool Monitor</title>
+</head>
+<body>
+    <div id="navi">
+        <ul id="nav">
+        <li><a href="#" onclick="setting()">Setting</a></li>
+        <li><a href="https://btc-e.com/" target="_blank">BTC-e</a></li>
+        <li><a href="https://vircurex.com/" target="_blank">Vircurex</a></li>
+        </ul>
+        <div id="title">Pool Monitor</div>
+    </div>
+    <ul id="exchange">
+            <li id="libtc"><a href="http://bitcoinwisdom.com/markets/btce/btcusd" target="_blank">BTC/USD</a><br/><span id="btc"></span></li>
+            <li id="liltc"><a href="http://bitcoinwisdom.com/markets/btce/ltcusd" target="_blank">LTC/USD</a><br/><span id="ltc"></span></li>
+            <li id="liltcbtc"><a href="http://bitcoinwisdom.com/markets/btce/ltcbtc" target="_blank">LTC/BTC</a><br/><span id="ltcbtc"></span></li>
+            <li id="linvc">NVC/USD<br/><span id="nvc"></span></li>
+            <li id="linvcbtc">NVC/BTC<br/><span id="nvcbtc"></span></li>
+            <li id="liftcbtc">FTC/BTC<br/><span id="ftcbtc"></span></li>
+            <li id="lidogebtc">DOGE/BTC<br/><span id="dogebtc"></span></li>
+            <li id="limaxbtc">MAX/BTC<br/><span id="maxbtc"></span></li>
+    </ul>
+    <div id="result">
+    </div>
+    <hr/>
+
+    <div id="apikey" class="apikey">
+        <h2>API KEY</h2>
+        <table id="apis">
+        </table>
+        <h2>CGMINER</h2>
+        <table id="cgminer">
+        </table>
+    </div>
+    
+    <script language='javascript'>
+    <!--
+        var APP_URL = '/pool.php';
+        var APP_URL2 = '/litecoin.php';
+        var APP_URL3 = '/litecoin_reward.php';
+        var APP_URL4 = '/ticker.php';
+        var CGMINER_URL = '/cgminer.php';
+
+        var Ext = {
+            'LTC':0.0,
+            'NVC':0.0,
+            'BTC':0.0,
+	    'FTC':0.0,
+	    'DOGE':0.0,
+	    'MAX':0.0,
+            'LTCBTC':0.0,
+            'FTCBTC':0.0,
+            'NVCBTC':0.0,
+            'DOGEBTC':0.0,
+            'MAXBTC':0.0,
+        };
+
+        function getData1(site,key,title,url,type) {
+            if (key == undefined || key == '')
+                return;
+            $.getJSON(APP_URL+'?site='+site+'&key='+key,function(data) {
+                $('#pool_'+site).html('').append(
+                    $('<h2>').append($('<a>').attr('href',url).attr('target','_blank').append(type + ' - ' + title))
+                ).append(
+                    $('<a>').attr('name',site)
+                ).append(
+                    $('<table>').attr('id','worker_'+site).append(
+                        $('<tr>')
+                            .append($('<th>').append('Name'))
+                            .append($('<td>').html(data.username))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Rewards'))
+                            .append($('<td>').html(data.confirmed_rewards))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Price'))
+                            .append($('<td>').append(Number(data.confirmed_rewards * Ext[type]).toFixed(5)))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Round Esti.'))
+                            .append($('<td>').html(data.round_estimate))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Round Shares'))
+                            .append($('<td>').html(data.round_shares))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Total HR'))
+                            .append($('<td>').html(data.total_hashrate))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Payout History'))
+                            .append($('<td>').html(data.payout_history))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Refresh Time'))
+                            .append($('<td>').html(new Date().format('yyyy/MM/dd HH:mm:ss')))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Workers').attr('colspan','2').attr('class','worker'))
+                    )
+                );
+                
+                for(var key in data.workers){
+                    if (data.workers[key].hashrate > 0)
+                    {
+                        $('#worker_'+site).append(
+                            $('<tr>')
+                                .append($('<th>').append(key))
+                                .append($('<td>').append(data.workers[key].hashrate))
+                        );
+                    }
+                }
+            });
+        }
+
+        function getData2(site,key,title,url,type) {
+            if (key == undefined || key == '')
+                return;
+            $.getJSON(APP_URL+'?site='+site+'&key='+key,function(data) {
+                $('#pool_'+site).html('').append(
+                    $('<h2>').append($('<a>').attr('href',url).attr('target','_blank').append(type + ' - ' + title))
+                ).append(
+                    $('<a>').attr('name',site)
+                ).append(
+                    $('<table>').attr('id','worker_'+site).append(
+                        $('<tr>')
+                            .append($('<th>').append('Name'))
+                            .append($('<td>').html(key))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Rewards'))
+                            .append($('<td>').html(data.user.unpaid_rewards))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Price'))
+                            .append($('<td>').append(Number(data.user.unpaid_rewards * Ext[type]).toFixed(5)))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Payout History'))
+                            .append($('<td>').html(data.user.paid_rewards))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Refresh Time'))
+                            .append($('<td>').html(new Date().format('yyyy/MM/dd HH:mm:ss')))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Workers').attr('colspan','2').attr('class','worker'))
+                    )
+                );
+
+                for(var key in data.workers){
+                    if (data.workers[key].hash_rate > 0)
+                    {
+                        $('#worker_'+site).append(
+                            $('<tr>')
+                                .append($('<th>').append(data.workers[key].worker_name))
+                                .append($('<td>').append(data.workers[key].hash_rate))
+                        );
+                    }
+                }
+            });
+        }
+        
+        function getData3(site,key,title,url,type) {
+            if (key == undefined || key == '')
+                return;
+            $.getJSON(APP_URL+'?site='+site+'-payout',function(data) {
+                $('#pool_'+site).html('').append(
+                    $('<h2>').append($('<a>').attr('href',url).attr('target','_blank').append(type + ' - ' + title))
+                ).append(
+                    $('<a>').attr('name',site)
+                ).append(
+                    $('<table>').attr('id','worker_'+site).append(
+                        $('<tr>')
+                            .append($('<th>').append('Name'))
+                            .append($('<td>').html(key.substring(0, 20)+'...'))
+                    )
+                );
+
+                if (data[key] != undefined)
+                {
+                    $('#worker_'+site).append(
+                        $('<tr>')
+                            .append($('<th>').append('Round Esti.'))
+                            .append($('<td>').append(data[key]))
+                    );
+                } else {
+                    $('#worker_'+site).append(
+                        $('<tr>')
+                            .append($('<th>').append('Round Esti.'))
+                            .append($('<td>').append('0'))
+                    );
+                }
+                
+                $.getJSON(APP_URL+'?site='+site+'-last_day',function(data) {
+                    if (data[0] != undefined && data[0][1][key] != undefined)
+                    {
+                        $('#worker_'+site).append(
+                            $('<tr>')
+                                .append($('<th>').append('Total HR'))
+                                .append($('<td>').append(parseInt(data[0][1][key]/1000)))
+                        );
+                    } else {
+                        $('#worker_'+site).append(
+                            $('<tr>')
+                                .append($('<th>').append('Total HR'))
+                                .append($('<td>').append('0'))
+                        );
+                    }
+                    
+                    $.getJSON(APP_URL+'?site='+site+'-recent_blocks',function(data) {
+                    
+                        $('#worker_'+site).append(
+                            $('<tr>')
+                                .append($('<th>').append('Refresh Time'))
+                                .append($('<td>').html(new Date().format('yyyy/MM/dd HH:mm:ss')))
+
+                        );
+                        
+                    	v = data[0];
+                    	
+                    	if (v != undefined)
+                    	{
+            				var date = new Date(v.ts * 1000);
+            				var dateStr = date.format('yyyy/MM/dd HH:mm:ss')
+            				var money = window.localStorage['block_pay_'+site];
+            				if (window.localStorage['block_ts_'+site] != v.ts) {
+            					$.getJSON(APP_URL3+'?id='+key+'&bid='+v.share, function(shares) {
+                                    if (shares.error == 0)
+                                    {
+                						$('#worker_'+site).append(
+                                            $('<tr>')
+                                                .append($('<th>').append('Block'))
+                                                .append($('<td>').append(dateStr + ' (' + (Math.round(shares.rewards*1000)/1000) + ')'))
+                                        );
+                						window.localStorage['block_pay_'+site] = shares.rewards;
+                    					window.localStorage['block_ts_'+site] = v.ts;
+                                    } else {
+                						$('#worker_'+site).append(
+                                            $('<tr>')
+                                                .append($('<th>').append('Block'))
+                                                .append($('<td>').append(dateStr))
+                                        );
+                                    }
+            					});
+            					$.getJSON(APP_URL2+'?address='+key+'&ts='+(new Date().getTime()), function(data) {
+                                        $('#worker_'+site).append(
+                                            $('<tr>')
+                                                .append($('<th>').append('Rewards'))
+                                                .append($('<td>').append(data.rewards))
+                                        ).append(
+                                            $('<tr>')
+                                                .append($('<th>').append('Price'))
+                                                .append($('<td>').append(Number(data.rewards * Ext[type]).toFixed(5)))
+                                        );
+            							window.localStorage['day_income_'+site] = data.rewards;
+            						}
+            					);
+            				} else {
+                                $('#worker_'+site).append(
+                                    $('<tr>')
+                                        .append($('<th>').append('Block'))
+                                        .append($('<td>').append(dateStr + ' (' + (Math.round(money*1000)/1000) + ')'))
+                                ).append(
+                                    $('<tr>')
+                                        .append($('<th>').append('Rewards'))
+                                        .append($('<td>').append(window.localStorage['day_income_'+site]))
+                                ).append(
+                                    $('<tr>')
+                                        .append($('<th>').append('Price'))
+                                        .append($('<td>').append(window.localStorage['day_income_'+site] * Ext[type]))
+                                );
+            				}
+                        } else {
+                            $('#worker_'+site).append(
+                                $('<tr>')
+                                    .append($('<th>').append('Block'))
+                                    .append($('<td>').append(''))
+                            ).append(
+                                $('<tr>')
+                                    .append($('<th>').append('Rewards'))
+                                    .append($('<td>').append('0'))
+                            ).append(
+                                $('<tr>')
+                                    .append($('<th>').append('Price'))
+                                    .append($('<td>').append('0'))
+                            );
+                        }
+                    });
+                });
+            });
+        }
+
+
+        function getData4(site,key,title,url,type) {
+            if (key == undefined || key == '')
+                return;
+            $.getJSON(APP_URL+'?site='+site+'&key='+key,function(data) {
+                $('#pool_'+site).html('').append(
+                    $('<h2>').append($('<a>').attr('href',url).attr('target','_blank').append(type + ' - ' + title))
+                ).append(
+                    $('<a>').attr('name',site)
+                ).append(
+                    $('<table>').attr('id','worker_'+site).append(
+                        $('<tr>')
+                            .append($('<th>').append('Name'))
+                            .append($('<td>').html(data.getuserstatus.data.username))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Confirmed'))
+                            .append($('<td>').append(data.getuserbalance.data.confirmed))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Unconfirmed'))
+                            .append($('<td>').append(data.getuserbalance.data.unconfirmed))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Price'))
+                            .append($('<td>').append(Number(data.getuserbalance.data.confirmed * Ext[type]+ data.getuserbalance.data.unconfirmed * Ext[type]).toFixed(5)))
+                    ).append(
+/*
+                        $('<tr>')
+                            .append($('<th>').append('Round Esti.'))
+                            .append($('<td>').html(data.getdashboarddata.data.personal.estimates.payout))
+                    ).append(
+*/
+                        $('<tr>')
+                            .append($('<th>').append('Round Shares'))
+                            .append($('<td>').html(data.getuserstatus.data.shares.valid))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Total HR'))
+                            .append($('<td>').html(data.getuserstatus.data.hashrate))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Refresh Time'))
+                            .append($('<td>').html(new Date().format('yyyy/MM/dd HH:mm:ss')))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Workers').attr('colspan','2').attr('class','worker'))
+                    )
+                );
+
+                for(var key in data.getuserworkers.data){
+                    if (data.getuserworkers.data[key].hashrate > 0)
+                    {
+                        $('#worker_'+site).append(
+                            $('<tr>')
+                                .append($('<th>').append(data.getuserworkers.data[key].username))
+                                .append($('<td>').append(data.getuserworkers.data[key].hashrate))
+                        );
+                    }
+                }
+            });
+        }
+
+        function getCGData(idx,site) {
+            if (site == undefined || site == '')
+                return;
+            $.getJSON(CGMINER_URL+'?addr='+site,function(data) {
+                $('#cgminer_'+idx).html('').append(
+                    $('<h2>').append('CGMINER ' + idx)
+                ).append(
+                    $('<a>').attr('name',site)
+                ).append(
+                    $('<table>').attr('id','worker_'+idx).append(
+                        $('<tr>')
+                            .append($('<th>').append('Name'))
+                            .append($('<td>').html(site))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('MHS av'))
+                            .append($('<td>').append(data.SUMMARY.MHS_av))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('MHS 5s'))
+                            .append($('<td>').append(data.SUMMARY.MHS_5s))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('H/W Error'))
+                            .append($('<td>').append(data.SUMMARY.Hardware_Errors))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Work Utility'))
+                            .append($('<td>').append(data.SUMMARY.Work_Utility))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Device Rejected %'))
+                            .append($('<td>').append(data.SUMMARY.Device_Rejected))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Pool Rejected %'))
+                            .append($('<td>').append(data.SUMMARY.Pool_Rejected))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Refresh Time'))
+                            .append($('<td>').html(new Date().format('yyyy/MM/dd HH:mm:ss')))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Workers').attr('colspan','3').attr('class','worker'))
+                    )
+                );
+
+                if(typeof data.GPU0 === 'undefined')
+                    return;
+                $('#worker_'+idx).append(
+                    $('<tr>')
+                        .append($('<th>').append('GPU0'))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('Hashrate'))
+                        .append($('<td>').append(data.GPU0.MHS_av))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('Temp.'))
+                        .append($('<td>').append(data.GPU0.Temperature))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('Accepted'))
+                        .append($('<td>').append(data.GPU0.Accepted))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('Rejected'))
+                        .append($('<td>').append(data.GPU0.Rejected))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('H/W Err.'))
+                        .append($('<td>').append(data.GPU0.Hardware_Errors))
+                );
+                if(typeof data.GPU1 === 'undefined')
+                    return;
+                $('#worker_'+idx).append(
+                    $('<tr>')
+                        .append($('<th>').append('GPU1'))
+                        .append($('<td>').append(data.GPU1.MHS_av))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('Hashrate'))
+                        .append($('<td>').append(data.GPU1.MHS_av))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('Temp.'))
+                        .append($('<td>').append(data.GPU1.Temperature))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('Accepted'))
+                        .append($('<td>').append(data.GPU1.Accepted))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('Rejected'))
+                        .append($('<td>').append(data.GPU1.Rejected))
+		    ).append(
+                    $('<tr>')
+                        .append($('<th>').append('H/W Err.'))
+                        .append($('<td>').append(data.GPU1.Hardware_Errors))
+                );
+            });
+        }
+
+        function getInfo() {
+            for(var key in APIS) {
+                var ischecked = window.localStorage['api_enable_'+APIS[key].site];
+                if (ischecked == undefined)
+                    ischecked = 1;
+                
+                if (ischecked != 1)
+                    continue;
+            
+                if (APIS[key].datatype == '1')
+                    getData1(APIS[key].site, window.localStorage[APIS[key].site],APIS[key].title,APIS[key].url,APIS[key].type);
+                else if (APIS[key].datatype == '2')
+                    getData2(APIS[key].site, window.localStorage[APIS[key].site],APIS[key].title,APIS[key].url,APIS[key].type);
+                else if (APIS[key].datatype == '3')
+                    getData3(APIS[key].site, window.localStorage[APIS[key].site],APIS[key].title,APIS[key].url,APIS[key].type);
+                else if (APIS[key].datatype == '4')
+                    getData4(APIS[key].site, window.localStorage[APIS[key].site],APIS[key].title,APIS[key].url,APIS[key].type);
+            }
+
+            for(var i=0;i<5;i=i+1) {
+                var ischecked = window.localStorage['cgminer_enable_'+i];
+                if (ischecked == undefined)
+                    ischecked = 1;
+                
+                if (ischecked != 1)
+                    continue;
+            
+                getCGData(i,window.localStorage['cgsite_'+i]);
+            }
+
+            window.setTimeout(getInfo, 180000);
+        }
+        
+        function setColor(tag, oldvalue, newvalue) {
+            if (oldvalue != 0)
+            {
+                if (newvalue > oldvalue)
+                    $('#li'+tag).attr('class', 'up');
+                else if (newvalue < oldvalue)
+                    $('#li'+tag).attr('class', 'down');
+            }
+        }
+
+        function getTicker() {
+            $.getJSON(APP_URL4,function(data) {
+                setColor('btc', Ext.BTC, data.BTC_USD);
+                setColor('ltc', Ext.LTC, data.LTC_USD);
+                setColor('nvc', Ext.NVC, data.NVC_USD);
+                setColor('doge', Ext.DOGE, data.DOGE_USD);
+                setColor('max', Ext.MAX, data.MAX_USD);
+                setColor('ltcbtc', Ext.LTCBTC, data.LTC_BTC);
+                setColor('nvcbtc', Ext.NVCBTC, data.NVC_BTC);
+                setColor('ftcbtc', Ext.FTCBTC, data.FTC_BTC);
+                setColor('dogebtc', Ext.DOGEBTC, data.DOGE_BTC);
+                setColor('maxbtc', Ext.MAXBTC, data.MAX_BTC);
+
+                Ext.BTC = data.BTC_USD;
+                Ext.LTC = data.LTC_USD;
+                Ext.NVC = data.NVC_USD;
+                Ext.FTC = data.FTC_USD;
+                Ext.DOGE = data.DOGE_USD;
+                Ext.MAX = data.MAX_USD;
+                Ext.LTCBTC = data.LTC_BTC;
+                Ext.NVCBTC = data.NVC_BTC;
+                Ext.FTCBTC = data.FTC_BTC;
+                Ext.DOGEBTC = data.DOGE_BTC;
+                Ext.MAXBTC = data.MAX_BTC;
+
+                $('#btc').html(data.BTC_USD);
+                $('#ltc').html(data.LTC_USD);
+                $('#ltcbtc').html(Number(Ext.LTCBTC).toFixed(5));
+                $('#nvc').html(Number(Ext.NVC).toFixed(4));
+                $('#nvcbtc').html(Number(Ext.NVCBTC).toFixed(5));
+                $('#ftcbtc').html(Number(Ext.FTCBTC).toFixed(5));
+                $('#dogebtc').html(Number(Ext.DOGEBTC).toExponential());
+                $('#maxbtc').html(Number(Ext.MAXBTC).toExponential());
+            });
+
+            window.setTimeout(getTicker, 5000);
+        }
+        
+        function movetopool(tag) {
+            $("#nav").toggle();
+            var top = window.pageYOffset;
+            window.location.hash=tag;
+            
+            var y = window.pageYOffset;
+            var x = window.pageXOffset;
+            if (top != window.pageYOffset)
+                window.scrollTo(x, y-66);
+        }
+        
+        function setting() {
+            $("#nav").toggle();
+        	$('#apikey').toggle();
+        }
+        
+        for(var key in APIS){
+            var ischecked = window.localStorage['api_enable_'+APIS[key].site];
+            if (ischecked == undefined)
+                ischecked = 1;
+        
+            $('#apis').append(
+                $('<tr>')
+                    .append($('<th>').append(APIS[key].type + ' - ' + APIS[key].stitle))
+                    .append($('<td>').append(
+                        $('<input>').attr('id','api_key_'+APIS[key].site).attr('size','10').val(window.localStorage[APIS[key].site])
+                    ).append(
+                        $('<button>').attr('id','save_'+APIS[key].site).append('Save').click(function() {
+                            var site = $(this).attr('id').substring(5);
+                            window.localStorage[site] = $('#api_key_'+site).val();
+                            window.localStorage['block_ts_'+site] = 0;
+                 			window.localStorage['day_income_'+site] = 0;
+                            
+                            location.reload();
+                        })
+                    ).append(
+                        $('<input>').attr('id','api_enable_'+APIS[key].site).attr('type','checkbox').attr('checked',(ischecked == 1) ? true : false).change(function () {
+                            var key = $(this).attr('id');
+                            var site = $(this).attr('id').substring(11);
+                            window.localStorage[key] = $(this).is(':checked') ? 1 : 0;
+                            if (window.localStorage[site] != undefined && window.localStorage[site] != "") {
+                                window.localStorage['block_ts_'+site] = 0;
+                     			window.localStorage['day_income_'+site] = 0;
+                                location.reload();
+                            }
+                        })
+                    )
+                )
+            );
+            
+            if (window.localStorage[APIS[key].site] != undefined && window.localStorage[APIS[key].site] != "" && ischecked == 1) {
+                $('#nav').append($('<li>').append(
+                    $('<a>').attr('href','javascript:movetopool(\''+APIS[key].site+'\');').append(APIS[key].type + ' - ' + APIS[key].title)
+                ));
+                $('#result').append($('<div>').attr('class','pool').attr('id','pool_'+APIS[key].site));
+
+                if (document.body.clientWidth>600)
+                    $('#pool_'+APIS[key].site).width('300px').css('float','left');
+            }
+        }
+
+        for(var i=0;i<5;i++){
+	    idx = 'cgsite_' + i;
+            var ischecked = window.localStorage['cgminer_enable_'+i];
+            if (ischecked == undefined)
+                ischecked = 1;
+        
+            $('#cgminer').append(
+                $('<tr>')
+                    .append($('<th>').append('CGMINER '+i))
+                    .append($('<td>').append(
+                        $('<input>').attr('id','cgminer_'+i).attr('size','20').val(window.localStorage[idx])
+                    ).append(
+                        $('<button>').attr('id','save_cgminer_'+i).append('Save').click(function() {
+                            var site = $(this).attr('id').substring(5);
+			    var ii = $(this).attr('id').substring(13);
+                            window.localStorage['cgsite_'+ii] = $('#cgminer_'+ii).val();
+                            window.localStorage['block_ts_'+site] = 0;
+               	            window.localStorage['day_income_'+site] = 0;
+                            
+                            location.reload();
+                        })
+                    ).append(
+                        $('<input>').attr('id','cgminer_enable_'+i).attr('type','checkbox').attr('checked',(ischecked == 1) ? true : false).change(function () {
+                            var key = $(this).attr('id');
+                            window.localStorage[key] = $(this).is(':checked') ? 1 : 0;
+                            var ii = $(this).attr('id').substring(15);
+                            if (window.localStorage["cgsite_"+ii] != undefined && window.localStorage["cgsite_"+ii] != "") {
+                                window.localStorage['block_ts_cgminer_'+ii] = 0;
+                                window.localStorage['day_income_cgminer_'+ii] = 0;
+                                location.reload();
+                            }
+                        })
+                    )
+                )
+            );
+            
+            if (window.localStorage[idx] != undefined && window.localStorage[idx] != "" && ischecked == 1) {
+                $('#nav').append($('<li>').append(
+                    $('<a>').attr('href','javascript:movetopool(\''+i+'\');').append(idx)
+                ));
+                $('#result').append($('<div>').attr('class','cgminer').attr('id','cgminer_'+i));
+
+                if (document.body.clientWidth>600)
+                    $('#cgminer_'+i).width('300px').css('float','left');
+            }
+        }
+
+        if (document.body.clientWidth>600)
+            $('#apikey').width('300px');
+        
+        $("#nav").addClass("js").before('<div id="menu">&#9776;</div>');
+        $("#menu").click(function(){
+            $("#nav").toggle();
+        });
+
+        getInfo();
+
+        getTicker();
+
+
+    //-->
+    </script>
+</body>
+</html>

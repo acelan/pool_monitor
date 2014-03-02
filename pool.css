@@ -1,0 +1,193 @@
+    body, table {
+        font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 10pt;
+        color: #FFF;
+    }
+    body {
+        margin: 0px;
+        padding-top: 20px;
+    }
+    #title {
+        color: #333;
+        font-size: 12pt;
+        position: absolute;
+        width: 90%;
+        top: 2px;
+        left: 40px;
+        text-align: center;
+    }
+    #result {
+        clear: both;
+    }
+    .pool {
+        background-color: #999;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 5px;
+        color: #000;
+    }
+    .pool table {
+        width: 100%;
+    }
+    .pool table th {
+        width: 110px;
+        text-align: right;
+        background-color: #777;
+        border-radius: 10px;
+        color: #FFFFFF;
+        padding: 3px 10px 3px 3px;
+    }
+    .pool h2 {
+        margin: 0px;
+        padding: 5px;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #555;
+        border-radius: 5px;
+        color: #FFFFFF;
+    }
+    .cgminer {
+        background-color: #999;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 5px;
+        color: #000;
+    }
+    .cgminer table {
+        width: 100%;
+    }
+    .cgminer table th {
+        width: 110px;
+        text-align: right;
+        background-color: #777;
+        border-radius: 10px;
+        color: #FFFFFF;
+        padding: 3px 10px 3px 3px;
+    }
+    .cgminer h2 {
+        margin: 0px;
+        padding: 5px;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #555;
+        border-radius: 5px;
+        color: #FFFFFF;
+    }
+    #navi {
+        position: fixed;
+        width: 100%;
+        background: #AAA;
+        top: 0px;
+        left: 0px;
+        z-index: 500;
+    }
+    #navi ul li:last-child {
+        border-right: none;
+    }
+    #navi ul li:last-child a {
+        border-radius: 0px 0px 10px 10px;
+    }
+    #navi ul li a {
+        display: block;
+        background: #ddd;
+        padding: 4% 10%;
+        font-size: 14pt;
+        text-decoration: none;
+        width: 80%;
+    }
+    #navi ul li a:hover {
+        background: #AAA;
+    }
+    #menu {
+        width: 1.4em;
+        display: block;
+        font-size: 1.35em;
+        text-align: center;
+        cursor: pointer;
+        float:left;
+    }
+    #nav.js {
+        display: none;
+    }
+    #navi ul {
+        width: 300px;
+        list-style: none;
+        position: absolute;
+        top: 11px;
+        left: -35px;
+    }
+    #navi ul li {
+        width: 300px;
+    }
+    .pool .worker {
+        text-align: center;
+        border-radius: 10px;
+        background: #AAA;
+    }
+    .cgminer .worker {
+        text-align: center;
+        border-radius: 10px;
+        background: #AAA;
+    }
+    hr {
+        clear: both;
+    }
+
+    #apikey {
+        background-color: #DDD;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 5px;
+        display: none;
+    }
+    #apikey th {
+        width: 110px;
+        text-align: right;
+        background-color: #AAA;
+        border-radius: 10px;
+        padding: 3px 10px 3px 3px;
+    }
+    #apikey input[type=text] {
+        width: 100px;
+    }
+    #apikey h2 {
+        margin: 0px;
+        padding: 5px;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #EEE;
+        border-radius: 10px;
+    }
+    a {
+        text-decoration: none;
+        color: #FFF;
+    }
+    #exchange {
+        list-style: none;
+        font-size: 7pt;
+        margin 0px;
+        padding: 0px;
+    }
+    #exchange li {
+        width: 48px;
+        height: 24px;
+        background-color: #34A8ED;
+        color: #FFF;
+        padding: 3px;
+        margin: 1px;
+        border-radius: 5px;
+        border: 1px solid #555;
+        float: left;
+    }
+    ul#exchange li a {
+        text-decoration: none;
+        color: #fff;
+    }
+    #exchange li.up {
+       background-color: #009933;
+    }
+    #exchange li.down {
+        background-color: #FF0000;
+    }
+
+}
