@@ -84,6 +84,15 @@
         },
         {
             "datatype":"4",
+            "site":"maxcoin-pool",
+            "title":"maxcoinpool.com",
+            "stitle":"Maxcoin",
+            "url":"http://maxcoinpool.com/",
+	    "apiurl":"http://maxcoinpool.com/index.php?page=api&&api_key=",
+            "type":"MAX"
+        },
+        {
+            "datatype":"4",
             "site":"max-coin",
             "title":"pool.max-coin.net",
             "stitle":"Max-Coin",
