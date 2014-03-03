@@ -46,6 +46,26 @@
         border-radius: 5px;
         color: #FFFFFF;
     }
+    .account table {
+        width: 100%;
+    }
+    .account table th {
+        width: 110px;
+        text-align: right;
+        background-color: #777;
+        border-radius: 10px;
+        color: #FFFFFF;
+        padding: 3px 10px 3px 3px;
+    }
+    .account h2 {
+        margin: 0px;
+        padding: 5px;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #555;
+        border-radius: 5px;
+        color: #FFFFFF;
+    }
     .cgminer {
         background-color: #999;
         padding: 10px;
