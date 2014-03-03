@@ -59,6 +59,12 @@
         <h2>CGMINER</h2>
         <table id="cgminer">
         </table>
+        <h2>Account</h2>
+        <table id="account">
+		<tr><td><h2>Name: </td><td><input id=name></td></tr>
+		<tr><td><h2>Profile: </td><td><input id=profile></td></tr>
+		<tr><td><input type="button" value="Save" onClick="saveSettings()"></td><td><input type="button" value="Load" onClick="loadSettings()"></td></tr>
+        </table>
     </div>
     
     <script language='javascript'>
@@ -68,6 +74,7 @@
         var APP_URL3 = '/litecoin_reward.php';
         var APP_URL4 = '/ticker.php';
         var CGMINER_URL = '/cgminer.php';
+        var PROFILE_URL = '/profile.php';
 
         var Ext = {
             'LTC':0.0,
@@ -82,6 +89,32 @@
             'DOGEBTC':0.0,
             'MAXBTC':0.0,
         };
+
+	function saveSettings() {
+		var param = {
+			"data" : window.localStorage,
+		};
+		$.ajax({
+			type: 'POST',
+			url: PROFILE_URL+'?action=save&id='+ document.getElementById("name").value + '_' + document.getElementById("profile").value,
+			data: param,
+			success: function(){ alert('Profile has been saved...'); },
+			dataType: 'text/json'
+		});
+	}
+
+	function loadSettings() {
+		$.ajax({
+			url: PROFILE_URL+'?action=load&id='+ document.getElementById("name").value + '_' + document.getElementById("profile").value,
+			success: function(response) {
+				data = $.parseJSON(response);
+                		for(var key in data) {
+					window.localStorage.setItem(key,data[key]);
+				}
+				location.reload();
+			}
+		});
+	}
 
         function getData1(site,key,title,url,type) {
             if (key == undefined || key == '')
