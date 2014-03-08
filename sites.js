@@ -18,6 +18,15 @@
         },
         {
             "datatype":"1",
+            "site":"wemineall",
+            "title":"www.wemineall.com",
+            "stitle":"WMA",
+            "url":"https://www.wemineall.com",
+            "apiurl":"https://www.wemineall.com/api?api_key=",
+            "type":"BTC"
+        },
+        {
+            "datatype":"1",
             "site":"give-me-coins-ltc",
             "title":"give-me-coins.com",
             "stitle":"GMC",
@@ -98,6 +107,15 @@
             "stitle":"Max-Coin",
             "url":"https://pool.max-coin.net/",
 	    "apiurl":"https://pool.max-coin.net/index.php?page=api&&api_key=",
+            "type":"MAX"
+        },
+        {
+            "datatype":"4",
+            "site":"hashfaster-max",
+            "title":"max.hashfaster.com",
+            "stitle":"HashFaster",
+            "url":"https://max.hashfaster.com/index.php",
+	    "apiurl":"https://max.hashfaster.com/index.php?page=api&api_key=",
             "type":"MAX"
         }
     ]
