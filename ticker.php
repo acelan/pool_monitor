@@ -2,11 +2,11 @@
 session_start();
 
 $data = array();
+if(isset($_SESSION["data"]))
+	$data = $_SESSION["data"];
 
 // refresh data after one minute
-if(isset($_SESSION["timestamp"]) && ((time()-$_SESSION["timestamp"]) < 60))
-	$data = $_SESSION["data"];
-else
+if(isset($_SESSION["timestamp"]) && ((time()-$_SESSION["timestamp"]) > 60))
 {
 	$new_data = update();
 	// we might get wrong data sometimes, so check it before update to new data
