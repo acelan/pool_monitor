@@ -2,9 +2,9 @@
 session_start();
 
 // refresh data after one minute
-if(isset($_SESSION[$_GET["site"]."timestamp"]) && ((time()-$_SESSION[$_GET["site"]."timestamp"]) < 60))
+if(isset($_SESSION[$_GET["site"]]["timestamp"]) && ((time()-$_SESSION[$_GET["site"]]["timestamp"]) < 60))
 {
-	echo $_SESSION[$_GET["site"]];
+	echo $_SESSION[$_GET["site"]]["data"];
 	exit(0);
 }
 
@@ -25,8 +25,8 @@ foreach( $sites as $site)
 }
 
 $data = get_data($apiurl, $datatype);
-$_SESSION[$_GET["site"]] = $data;
-$_SESSION[$_GET["site"]."timestamp"] = time();
+$_SESSION[$_GET["site"]]["data"] = $data;
+$_SESSION[$_GET["site"]]["timestamp"] = time();
 
 echo $data;
 
