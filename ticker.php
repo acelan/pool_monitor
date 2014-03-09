@@ -1,12 +1,8 @@
 <?php
-session_start();
-
-$data = array();
-if(isset($_SESSION["data"]))
-	$data = $_SESSION["data"];
+$data = load();
 
 // refresh data after one minute
-if(isset($_SESSION["timestamp"]) && ((time()-$_SESSION["timestamp"]) > 60))
+if((time()-$data["timestamp"]) > 60)
 {
 	$new_data = update();
 	// we might get wrong data sometimes, so check it before update to new data
@@ -17,8 +13,8 @@ if(isset($_SESSION["timestamp"]) && ((time()-$_SESSION["timestamp"]) > 60))
 	$data["ftc_btc"] = is_numeric($new_data["ftc_btc"])?$new_data["ftc_btc"]:$data["ftc_btc"];
 	$data["doge_btc"] = is_numeric($new_data["doge_btc"])?$new_data["doge_btc"]:$data["doge_btc"];
 	$data["max_btc"] = is_numeric($new_data["max_btc"])?$new_data["max_btc"]:$data["max_btc"];
-	$_SESSION["timestamp"] = time();
-	$_SESSION["data"] = $data;
+	$data["timestamp"] = time();
+	save($data);
 }
 
 $arr = array("BTC_USD" => $data["btc_usd"],
@@ -45,7 +41,6 @@ function update()
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; PHP client; '.php_uname('s').'; PHP/'.phpversion().')');
-		$_SESSION["ch"] = ch;
 	}
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -108,5 +103,20 @@ function update()
 		      "max_btc" => $max_btc,
 	      );
 	return $data;
+}
+
+function save($data)
+{
+	$file = "data/ticker.dat";
+	file_put_contents($file, json_encode($data));
+
+}
+
+function load()
+{
+	$file = "data/ticker.dat";
+	if(file_exists($file))
+		return (array)json_decode(file_get_contents($file));
+	return array("timestamp" => 0);
 }
 ?>
