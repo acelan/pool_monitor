@@ -69,7 +69,7 @@
     
     <script language='javascript'>
     <!--
-        var APP_URL = '/pool.php';
+        var APP_URL = '/pool2.php';
         var APP_URL2 = '/litecoin.php';
         var APP_URL3 = '/litecoin_reward.php';
         var APP_URL4 = '/ticker.php';
@@ -227,7 +227,7 @@
         function getData3(site,key,title,url,type) {
             if (key == undefined || key == '')
                 return;
-            $.getJSON(APP_URL+'?site='+site+'-payout',function(data) {
+            $.getJSON(APP_URL+'?site='+site,function(data) {
                 $('#pool_'+site).html('').append(
                     $('<h2>').append($('<a>').attr('href',url).attr('target','_blank').append(type + ' - ' + title))
                 ).append(
@@ -255,102 +255,99 @@
                     );
                 }
                 
-                $.getJSON(APP_URL+'?site='+site+'-last_day',function(data) {
-                    if (data[0] != undefined && data[0][1][key] != undefined)
-                    {
-                        $('#worker_'+site).append(
-                            $('<tr>')
-                                .append($('<th>').append('Total HR'))
-                                .append($('<td>').append(parseInt(data[0][1][key]/1000)))
-                        );
-                    } else {
-                        $('#worker_'+site).append(
-                            $('<tr>')
-                                .append($('<th>').append('Total HR'))
-                                .append($('<td>').append('0'))
-                        );
-                    }
-                    
-                    $.getJSON(APP_URL+'?site='+site+'-recent_blocks',function(data) {
-                    
-                        $('#worker_'+site).append(
-                            $('<tr>')
-                                .append($('<th>').append('Refresh Time'))
-                                .append($('<td>').html(new Date().format('yyyy/MM/dd HH:mm:ss')))
+                if (data['log'] != undefined && data['log']['local_hash_rates'][key] != undefined)
+                {
+                    $('#worker_'+site).append(
+                        $('<tr>')
+                            .append($('<th>').append('Total HR'))
+                            .append($('<td>').append(parseInt(data['log']['local_hash_rates'][key]/1000)))
+                    );
+                } else {
+                    $('#worker_'+site).append(
+                        $('<tr>')
+                            .append($('<th>').append('Total HR'))
+                            .append($('<td>').append('0'))
+                    );
+                }
+                
+                $('#worker_'+site).append(
+                    $('<tr>')
+                        .append($('<th>').append('Refresh Time'))
+                        .append($('<td>').html(new Date().format('yyyy/MM/dd HH:mm:ss')))
 
-                        );
-                        
-                    	v = data[0];
-                    	
-                    	if (v != undefined)
-                    	{
-            				var date = new Date(v.ts * 1000);
-            				var dateStr = date.format('yyyy/MM/dd HH:mm:ss')
-            				var money = window.localStorage['block_pay_'+site];
-            				if (window.localStorage['block_ts_'+site] != v.ts) {
-            					$.getJSON(APP_URL3+'?id='+key+'&bid='+v.share, function(shares) {
-                                    if (shares.error == 0)
-                                    {
-                						$('#worker_'+site).append(
-                                            $('<tr>')
-                                                .append($('<th>').append('Block'))
-                                                .append($('<td>').append(dateStr + ' (' + (Math.round(shares.rewards*1000)/1000) + ')'))
-                                        );
-                						window.localStorage['block_pay_'+site] = shares.rewards;
-                    					window.localStorage['block_ts_'+site] = v.ts;
-                                    } else {
-                						$('#worker_'+site).append(
-                                            $('<tr>')
-                                                .append($('<th>').append('Block'))
-                                                .append($('<td>').append(dateStr))
-                                        );
-                                    }
-            					});
-            					$.getJSON(APP_URL2+'?address='+key+'&ts='+(new Date().getTime()), function(data) {
-                                        $('#worker_'+site).append(
-                                            $('<tr>')
-                                                .append($('<th>').append('Rewards'))
-                                                .append($('<td>').append(data.rewards))
-                                        ).append(
-                                            $('<tr>')
-                                                .append($('<th>').append('Price'))
-                                                .append($('<td>').append(Number(data.rewards * Ext[type]).toFixed(5)))
-                                        );
-            							window.localStorage['day_income_'+site] = data.rewards;
-            						}
-            					);
-            				} else {
-                                $('#worker_'+site).append(
+                );
+                
+                    v = data['recent'];
+                    
+                    if (v != undefined)
+                    {
+            			var date = new Date(v.ts * 1000);
+            			var dateStr = date.format('yyyy/MM/dd HH:mm:ss')
+            			var money = window.localStorage['block_pay_'+site];
+            			if (window.localStorage['block_ts_'+site] != v.ts) {
+            				$.getJSON(APP_URL3+'?id='+key+'&bid='+v.share, function(shares) {
+                            if (shares.error == 0)
+                            {
+                					$('#worker_'+site).append(
                                     $('<tr>')
                                         .append($('<th>').append('Block'))
-                                        .append($('<td>').append(dateStr + ' (' + (Math.round(money*1000)/1000) + ')'))
-                                ).append(
+                                        .append($('<td>').append(dateStr + ' (' + (Math.round(shares.rewards*1000)/1000) + ')'))
+                                );
+                					window.localStorage['block_pay_'+site] = shares.rewards;
+                    				window.localStorage['block_ts_'+site] = v.ts;
+                            } else {
+                					$('#worker_'+site).append(
+                                    $('<tr>')
+                                        .append($('<th>').append('Block'))
+                                        .append($('<td>').append(dateStr))
+                                );
+                            }
+            				});
+            				$.getJSON(APP_URL2+'?address='+key+'&ts='+(new Date().getTime()), function(data) {
+                                $('#worker_'+site).append(
                                     $('<tr>')
                                         .append($('<th>').append('Rewards'))
-                                        .append($('<td>').append(window.localStorage['day_income_'+site]))
+                                        .append($('<td>').append(data.rewards))
                                 ).append(
                                     $('<tr>')
                                         .append($('<th>').append('Price'))
-                                        .append($('<td>').append(window.localStorage['day_income_'+site] * Ext[type]))
+                                        .append($('<td>').append(Number(data.rewards * Ext[type]).toFixed(5)))
                                 );
-            				}
-                        } else {
-                            $('#worker_'+site).append(
-                                $('<tr>')
-                                    .append($('<th>').append('Block'))
-                                    .append($('<td>').append(''))
-                            ).append(
-                                $('<tr>')
-                                    .append($('<th>').append('Rewards'))
-                                    .append($('<td>').append('0'))
-                            ).append(
-                                $('<tr>')
-                                    .append($('<th>').append('Price'))
-                                    .append($('<td>').append('0'))
-                            );
-                        }
-                    });
-                });
+            						window.localStorage['day_income_'+site] = data.rewards;
+            					}
+            				);
+            			} else {
+                        $('#worker_'+site).append(
+                            $('<tr>')
+                                .append($('<th>').append('Block'))
+                                .append($('<td>').append(dateStr + ' (' + (Math.round(money*1000)/1000) + ')'))
+                        ).append(
+                            $('<tr>')
+                                .append($('<th>').append('Rewards'))
+                                .append($('<td>').append(window.localStorage['day_income_'+site]))
+                        ).append(
+                            $('<tr>')
+                                .append($('<th>').append('Price'))
+                                .append($('<td>').append(window.localStorage['day_income_'+site] * Ext[type]))
+                        );
+            			}
+                } else {
+                    $('#worker_'+site).append(
+                        $('<tr>')
+                            .append($('<th>').append('Block'))
+                            .append($('<td>').append(''))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Rewards'))
+                            .append($('<td>').append('0'))
+                    ).append(
+                        $('<tr>')
+                            .append($('<th>').append('Price'))
+                            .append($('<td>').append('0'))
+                    );
+                }
+                
+                
             });
         }
 

@@ -1,12 +1,12 @@
 <?php
-session_start();
+//session_start();
 
 // refresh data after one minute
-if(isset($_SESSION[$_GET["site"]]["timestamp"]) && ((time()-$_SESSION[$_GET["site"]]["timestamp"]) < 60))
-{
-	echo $_SESSION[$_GET["site"]]["data"];
-	exit(0);
-}
+//if(isset($_SESSION[$_GET["site"]]["timestamp"]) && ((time()-$_SESSION[$_GET["site"]]["timestamp"]) < 60))
+//{
+//	echo $_SESSION[$_GET["site"]]["data"];
+//	exit(0);
+//}
 
 $json = file_get_contents('./sites.js');
 $json = str_replace('var APIS = ','' ,$json);
@@ -18,8 +18,10 @@ foreach( $sites as $site)
 {
 	if($site->site == $_GET["site"])
 	{
-		$apiurl = $site->apiurl.$_GET["key"];
 		$datatype = $site->datatype;
+		$apiurl = $site->apiurl;
+		if($datatype != "3") // p2pool
+			$apiurl .= $apiurl.$_GET["key"];
 		break;
 	}
 }
@@ -51,6 +53,28 @@ function get_data($apiurl, $datatype)
 	}
 	else if($datatype == "3")
 	{
+		$data = array();
+
+		$url = $apiurl."current_payouts";
+		curl_setopt($ch, CURLOPT_URL, $url);
+		$res = curl_exec($ch);
+		$data = json_decode($res);
+
+		$url = $apiurl."web/log";
+		curl_setopt($ch, CURLOPT_URL, $url);
+		$res = curl_exec($ch);
+		$tmp= json_decode($res);
+		$data1["log"] = $tmp["0"];
+		$data = (object)array_merge((array)$data, (array)$data1);
+
+		$url = $apiurl."recent_blocks";
+		curl_setopt($ch, CURLOPT_URL, $url);
+		$res = curl_exec($ch);
+		$tmp= json_decode($res);
+		$data1["recent"] = $tmp["0"];
+		$data = (object)array_merge((array)$data, (array)$data1);
+
+		$res = json_encode($data);
 	}
 	else if($datatype == "4")
 	{
