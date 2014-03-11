@@ -8,6 +8,15 @@
             "type":"LTC"
         },
         {
+            "datatype":"3",
+            "site":"consortium-p2pool",
+            "title":"Consortium Pool",
+            "stitle":"Consortium Pool",
+            "url":"http://121.12.115.170:22550/static",
+	    "apiurl":"http://121.12.115.170:22550/",
+            "type":"DOGE"
+        },
+        {
             "datatype":"1",
             "site":"wemineltc",
             "title":"www.wemineltc.com",
