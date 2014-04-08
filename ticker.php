@@ -35,6 +35,7 @@ echo json_encode($arr);
 function update()
 {
 	$ch = null;
+/*
 	$url = "http://s1.bitcoinwisdom.com:8080/ticker";
 	if (is_null($ch))
 	{
@@ -46,14 +47,64 @@ function update()
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-	
+
 	$res = curl_exec($ch);
 	$dec = json_decode($res, true);
 	
 	$btc_usd = $dec["btcebtcusd"]["last"];
 	$ltc_usd = $dec["btceltcusd"]["last"];
 	$ltc_btc = $dec["btceltcbtc"]["last"];
-	
+*/
+	$url = "https://btc-e.com/api/2/btc_usd/ticker";
+	if (is_null($ch))
+	{
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; PHP client; '.php_uname('s').'; PHP/'.phpversion().')');
+	}
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+	$res = curl_exec($ch);
+	$dec = json_decode($res, true);
+
+	$btc_usd = $dec["ticker"]["last"];
+
+	$url = "https://btc-e.com/api/2/ltc_usd/ticker";
+	if (is_null($ch))
+	{
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; PHP client; '.php_uname('s').'; PHP/'.phpversion().')');
+	}
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+	$res = curl_exec($ch);
+	$dec = json_decode($res, true);
+
+	$ltc_usd = $dec["ticker"]["last"];
+
+	$url = "https://btc-e.com/api/2/ltc_btc/ticker";
+	if (is_null($ch))
+	{
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; PHP client; '.php_uname('s').'; PHP/'.phpversion().')');
+	}
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+	$res = curl_exec($ch);
+	$dec = json_decode($res, true);
+
+	$ltc_btc = $dec["ticker"]["last"];
 /*
 	$market_id = "5"; // FTC/BTC
 	$url = "http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=";
