@@ -47,6 +47,7 @@
             <li id="liftcbtc">FTC/BTC<br/><span id="ftcbtc"></span></li>
             <li id="lidogebtc">DOGE/BTC<br/><span id="dogebtc"></span></li>
             <li id="limaxbtc">MAX/BTC<br/><span id="maxbtc"></span></li>
+            <li id="lidrkbtc">DRK/BTC<br/><span id="drkbtc"></span></li>
     </ul>
     <div id="result">
     </div>
@@ -88,6 +89,7 @@
             'NVCBTC':0.0,
             'DOGEBTC':0.0,
             'MAXBTC':0.0,
+            'DRKBTC':0.0,
         };
 
 	function saveSettings() {
@@ -548,6 +550,7 @@
                 setColor('ftcbtc', Ext.FTCBTC, data.FTC_BTC);
                 setColor('dogebtc', Ext.DOGEBTC, data.DOGE_BTC);
                 setColor('maxbtc', Ext.MAXBTC, data.MAX_BTC);
+                setColor('drkbtc', Ext.DRKBTC, data.DRK_BTC);
 
                 Ext.BTC = data.BTC_USD;
                 Ext.LTC = data.LTC_USD;
@@ -560,6 +563,7 @@
                 Ext.FTCBTC = data.FTC_BTC;
                 Ext.DOGEBTC = data.DOGE_BTC;
                 Ext.MAXBTC = data.MAX_BTC;
+                Ext.DRKBTC = data.DRK_BTC;
 
                 $('#btc').html(data.BTC_USD);
                 $('#ltc').html(data.LTC_USD);
@@ -569,6 +573,7 @@
                 $('#ftcbtc').html(Number(Ext.FTCBTC).toFixed(5));
                 $('#dogebtc').html(Number(Ext.DOGEBTC).toExponential());
                 $('#maxbtc').html(Number(Ext.MAXBTC).toExponential());
+                $('#drkbtc').html(Number(Ext.DRKBTC).toExponential());
             });
 
             window.setTimeout(getTicker, 5000);

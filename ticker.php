@@ -13,6 +13,7 @@ if((time()-$data["timestamp"]) > 60)
 	$data["ftc_btc"] = is_numeric($new_data["ftc_btc"])?$new_data["ftc_btc"]:$data["ftc_btc"];
 	$data["doge_btc"] = is_numeric($new_data["doge_btc"])?$new_data["doge_btc"]:$data["doge_btc"];
 	$data["max_btc"] = is_numeric($new_data["max_btc"])?$new_data["max_btc"]:$data["max_btc"];
+	$data["drk_btc"] = is_numeric($new_data["drk_btc"])?$new_data["drk_btc"]:$data["drk_btc"];
 	$data["timestamp"] = time();
 	save($data);
 }
@@ -24,6 +25,7 @@ $arr = array("BTC_USD" => $data["btc_usd"],
 	     "FTC_BTC" => $data["ftc_btc"],
 	     "DOGE_BTC" => $data["doge_btc"],
 	     "MAX_BTC" => $data["max_btc"],
+	     "DRK_BTC" => $data["drk_btc"],
 	     "NVC_USD" => $data["nvc_btc"]*$data["btc_usd"],
 	     "FTC_USD" => $data["ftc_btc"]*$data["btc_usd"],
 	     "DOGE_USD" => $data["doge_btc"]*$data["btc_usd"],
@@ -142,6 +144,7 @@ function update()
 		$nvc_btc = $dec["return"]["markets"]["NVC/BTC"]["lasttradeprice"];
 		$doge_btc = $dec["return"]["markets"]["DOGE/BTC"]["lasttradeprice"];
 		$max_btc = $dec["return"]["markets"]["MAX/BTC"]["lasttradeprice"];
+		$drk_btc = $dec["return"]["markets"]["DRK/BTC"]["lasttradeprice"];
 	}
 	
 
@@ -152,6 +155,7 @@ function update()
 		      "nvc_btc" => $nvc_btc,
 		      "doge_btc" => $doge_btc,
 		      "max_btc" => $max_btc,
+		      "drk_btc" => $drk_btc,
 	      );
 	return $data;
 }
