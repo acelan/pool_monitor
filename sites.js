@@ -126,6 +126,15 @@
             "url":"https://max.hashfaster.com/index.php",
 	    "apiurl":"https://max.hashfaster.com/index.php?page=api&api_key=",
             "type":"MAX"
+        },
+        {
+            "datatype":"4",
+            "site":"darkcoin-drk",
+            "title":"www.drkpool.com",
+            "stitle":"DarkCoinPool",
+            "url":"https://www.drkpool.com/index.php",
+            "apiurl":"http://www.drkpool.com/index.php?page=api&api_key=",
+            "type":"DRK"
         }
     ]
 
