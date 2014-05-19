@@ -70,7 +70,7 @@
     
     <script language='javascript'>
     <!--
-        var APP_URL = '/pool2.php';
+        var APP_URL = '/pool.php';
         var APP_URL2 = '/litecoin.php';
         var APP_URL3 = '/litecoin_reward.php';
         var APP_URL4 = '/ticker.php';
@@ -84,6 +84,7 @@
 	    'FTC':0.0,
 	    'DOGE':0.0,
 	    'MAX':0.0,
+	    'DRK':0.0,
             'LTCBTC':0.0,
             'FTCBTC':0.0,
             'NVCBTC':0.0,
@@ -545,6 +546,7 @@
                 setColor('nvc', Ext.NVC, data.NVC_USD);
                 setColor('doge', Ext.DOGE, data.DOGE_USD);
                 setColor('max', Ext.MAX, data.MAX_USD);
+                setColor('drk', Ext.DRK, data.DRK_USD);
                 setColor('ltcbtc', Ext.LTCBTC, data.LTC_BTC);
                 setColor('nvcbtc', Ext.NVCBTC, data.NVC_BTC);
                 setColor('ftcbtc', Ext.FTCBTC, data.FTC_BTC);
@@ -558,6 +560,7 @@
                 Ext.FTC = data.FTC_USD;
                 Ext.DOGE = data.DOGE_USD;
                 Ext.MAX = data.MAX_USD;
+                Ext.DRK = data.DRK_USD;
                 Ext.LTCBTC = data.LTC_BTC;
                 Ext.NVCBTC = data.NVC_BTC;
                 Ext.FTCBTC = data.FTC_BTC;

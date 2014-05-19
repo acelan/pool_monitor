@@ -30,6 +30,7 @@ $arr = array("BTC_USD" => $data["btc_usd"],
 	     "FTC_USD" => $data["ftc_btc"]*$data["btc_usd"],
 	     "DOGE_USD" => $data["doge_btc"]*$data["btc_usd"],
 	     "MAX_USD" => $data["max_btc"]*$data["btc_usd"],
+	     "DRK_USD" => $data["drk_btc"]*$data["btc_usd"],
 );
 
 echo json_encode($arr);
